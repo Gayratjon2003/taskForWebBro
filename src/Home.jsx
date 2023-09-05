@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { filters } from "./constants";
 const Home = ({ addToCart }) => {
   const [products, setProducts] = useState([]);
-  // const [, set] = useState();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItemsLength, setTotalItemsLength] = useState(0);
   const [filtered, setFiltered] = useState(false);
@@ -22,36 +21,6 @@ const Home = ({ addToCart }) => {
       setTotalItemsLength(data?.total);
     } catch (err) {
       console.log(err);
-    }
-  };
-  const nextPageBtn = () => {
-    if (currentPage < Math.ceil(totalItemsLength / itemsPerPage)) {
-      setCurrentPage((prev) => prev + 1);
-    }
-  };
-  const prevPageBtn = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prev) => prev - 1);
-    }
-  };
-  const selectedOption = (e) => {
-    filters?.map((item) => {
-      if (item.value === e.target.value) {
-        setFilterVal({ ...filterVal, value: e.target.value });
-        setFiltered(true);
-      } else if(e.target.value === 'filtersiz') {
-        setFilterVal({...filterVal, value: ""})
-      }
-    });
-    if (filtered) {
-      filter();
-    }
-  };
-  const selectedOptionDown = (e) => {
-    if (e.target.value === "true") {
-      setFilterVal({ ...filterVal, down: true });
-    } else {
-      setFilterVal({ ...filterVal, down: false });
     }
   };
   const filter = () => {
@@ -95,6 +64,40 @@ const Home = ({ addToCart }) => {
     }
 
   };
+  const nextPageBtn = () => {
+    if (currentPage < Math.ceil(totalItemsLength / itemsPerPage)) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+  const prevPageBtn = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+  const selectedOption = (e) => {
+    filters?.map((item) => {
+      if (item.value === e.target.value) {
+        setFilterVal({ ...filterVal, value: e.target.value });
+        setFiltered(true);
+      } else if(e.target.value === 'filtersiz') {
+        setFilterVal({...filterVal, value: ""})
+      }
+    });
+    if (filtered) {
+      filter();
+    }
+  };
+  const selectedOptionDown = (e) => {
+    if (e.target.value === "true") {
+      setFilterVal({ ...filterVal, down: true });
+    } else {
+      setFilterVal({ ...filterVal, down: false });
+    }
+  };
+  const addProduct = (id) => {
+    let product = products.find((item) => item.id === id);
+    addToCart({ ...product, qty: 1 });
+  };
   useEffect(() => {
     filter();
   }, [filterVal]);
@@ -104,10 +107,7 @@ const Home = ({ addToCart }) => {
       filter();
     }
   }, [currentPage]);
-  const addProduct = (id) => {
-    let product = products.find((item) => item.id === id);
-    addToCart({ ...product, qty: 1 });
-  };
+ 
   return (
     <>
       <div className="filter">
