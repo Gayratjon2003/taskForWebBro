@@ -1,24 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import Header from "./Header";
+import Home from "./Home";
+import { Route, Routes } from "react-router-dom";
+import { routes } from "./constants";
+import Cart from "./Cart";
 
 function App() {
+  const [cartData, setCartData] = useState([]);
+  const addProduct = (product) => {
+    if (!cartData.length) {
+      const currentData = cartData;
+      currentData.push(product);
+      setCartData(currentData);
+    } else {
+      let itemIsHave = cartData.find((item) => item.id === product.id);
+      if (itemIsHave) {
+        itemIsHave.qty+=1;
+      } else {
+        const currentData = cartData;
+        currentData.push(product);
+        setCartData(currentData);
+      }
+    }
+    console.log(cartData);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main>
+      <Header />
+      <Routes>
+        <Route path={routes.HOME} element={<Home addToCart={addProduct} />} />
+        <Route path={routes.CART} element={<Cart data={cartData} addToCart={addProduct} setCartData={setCartData} />} />
+      </Routes>
+    </main>
   );
 }
 
